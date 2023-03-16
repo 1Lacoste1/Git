@@ -1,44 +1,44 @@
 package org.example;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.awt.image.AreaAveragingScaleFilter;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 /*
-Самые редкие байты
+Реверс файла
 */
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String fileName = scanner.nextLine();
-        byte[] buff = new byte[256];
-        int curr = Integer.MAX_VALUE;
-
-        try(FileInputStream fileInputStream = new FileInputStream(fileName)) {
-            while (fileInputStream.available() > 0) {
-                buff[fileInputStream.read()] += 1;
-            }
-        }
-
-        for(int count : buff) {
-            if(count > 0 && count < curr) {
-                curr = count;
-            }
-        }
-
+        String fileName2 = scanner.nextLine();
         ArrayList<Integer> arrayList = new ArrayList<>();
 
-        for(int i = 0; i < buff.length; i++) {
-            if(buff[i] == curr) {
-                arrayList.add(i);
+        try(FileInputStream fileInputStream = new FileInputStream(fileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(fileName)
+        ) {
+            while (fileInputStream.available() > 0) {
+                int count = fileInputStream.read();
+                arrayList.add(count);
             }
+
+            Collections.reverse(arrayList);
+
+            for(Integer i : arrayList) {
+                fileOutputStream.write(i);
+            }
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
-        for(Integer num : arrayList)
-            System.out.print(num + " ");
 
     }
 }
